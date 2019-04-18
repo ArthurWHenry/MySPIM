@@ -40,6 +40,14 @@ void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 /* 10 Points */
 int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 {
+  unsigned index = PC >> 2;
+
+  // If not byte addressed, halt.
+  if(PC % 4 != 0)
+      return 1;
+
+  // Fetch the instruction addressed by PC from Mem and write it to instruction.
+  *instruction = Mem[index];
   return 0;
 }
 
