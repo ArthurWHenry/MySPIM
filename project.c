@@ -119,6 +119,18 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
+  // Bad address, halt
+  if ((MemWrite == 1 || MemRead == 1) && ALUresult % 4 != 0)
+    return 1;
+
+  // sets memory of ALUresult to data2
+  if (MemWrite == 1)
+    Mem[ALUresult >> 2] = data2;
+
+  //sets to ALUresult shifted 2-bits
+  if (MemRead == 1)
+    *memdata = Mem[ALUresult >> 2]; 
+    
   return 0;
 }
 
