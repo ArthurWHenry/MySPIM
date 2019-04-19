@@ -1,3 +1,6 @@
+// Hunter Johnson
+// Arthur Henry
+// CDA | Spring 2019
 #include "spimcore.h"
 
 
@@ -117,6 +120,46 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
 {
+  unsigned char ALUControl = ALUOp;
+
+  switch(ALUOp)
+  {
+    case 0x0: // don't cares | add
+    case 0x1: // subtraction
+    case 0x2: // slt signed
+    case 0x3: // slt unsigned
+    case 0x4: // AND
+    case 0x5: // OR
+    case 0x6: // shift extended_value left 16 bits
+      break;
+    case 0x7: // r-type instructions
+      switch(funct)
+      {
+        case 0x20: // add
+          ALUControl = 0x0;
+          break;
+        case 0x24: // AND
+          ALUControl = 0x4;
+          break;
+        case 0x25: // OR
+          ALUControl = 0x5;
+          break;
+        case 0x2a: // slt signed
+          ALUControl = 0x2;
+          break;
+        case 0x2b: // slt unsigned
+          ALUControl = 0x3;
+          break;
+        default: // any others
+          return 1;
+      }
+      break;
+    default:
+      return 1;
+  }
+
+  ALU(data1, (ALUSrc == 1) ? extended_value : data2, ALUControl, ALUresult, Zero);
+
   return 0;
 }
 
