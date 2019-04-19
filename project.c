@@ -1,3 +1,6 @@
+// Hunter Johnson
+// Arthur Henry
+// CDA | Spring 2019
 #include "spimcore.h"
 
 
@@ -5,6 +8,7 @@
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
+  // check if A and B are equal
   *Zero = ((A - B) == 0) ? 1 : 0;
 
   switch(ALUControl)
@@ -105,13 +109,57 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-
+  // Check if sign bit is 1
+  if ((offset >> 15) == 1)
+    *extended_value = offset | 0xffff0000;
+  else
+    *extended_value = offset & 0x0000ffff; // maintain positive value
 }
 
 /* ALU operations */
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
 {
+  unsigned char ALUControl = ALUOp;
+
+  switch(ALUOp)
+  {
+    case 0x0: // don't cares | add
+    case 0x1: // subtraction
+    case 0x2: // slt signed
+    case 0x3: // slt unsigned
+    case 0x4: // AND
+    case 0x5: // OR
+    case 0x6: // shift extended_value left 16 bits
+      break;
+    case 0x7: // r-type instructions
+      switch(funct)
+      {
+        case 0x20: // add
+          ALUControl = 0x0;
+          break;
+        case 0x24: // AND
+          ALUControl = 0x4;
+          break;
+        case 0x25: // OR
+          ALUControl = 0x5;
+          break;
+        case 0x2a: // slt signed
+          ALUControl = 0x2;
+          break;
+        case 0x2b: // slt unsigned
+          ALUControl = 0x3;
+          break;
+        default: // any others
+          return 1;
+      }
+      break;
+    default:
+      return 1;
+  }
+
+  ALU(data1, (ALUSrc == 1) ? extended_value : data2, ALUControl, ALUresult, Zero);
+
   return 0;
 }
 
