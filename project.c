@@ -92,6 +92,41 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
+  switch(op)
+  {
+    // Will be using struct defined in spimcore.h
+    // RegDst, Jump, Branch, MemRead, MemtoReg, ALUOp, MemWrite, ALUSrc, RegWrite
+    case 0x0: // ADD, SUB, AND, OR, SLT, SLTU
+      *controls = (struct_controls){1, 0, 0, 0, 0, 7, 0, 0, 1};
+      break;
+    case 0x8: // ADDI
+      *controls = (struct_controls){0, 0, 0, 0, 0, 0, 0, 1, 1};
+      break;
+    case 0x23: // LW
+      *controls = (struct_controls){0, 0, 0, 1, 1, 0, 0, 1, 1};
+      break;
+    case 0x2b: // SW
+      *controls = (struct_controls){0, 0, 0, 0, 0, 0, 1, 1, 0};
+      break;
+    case 0xf: // LUI
+      *controls = (struct_controls){0, 0, 0, 0, 0, 6, 0, 1, 1};
+      break;
+    case 0x4: // BEQ
+      *controls = (struct_controls){2, 0, 1, 0, 2, 1, 0, 2, 0};
+      break;
+    case 0xa: // SLTI
+      *controls = (struct_controls){1, 0, 0, 0, 0, 2, 0, 1, 1};
+      break;
+    case 0xb: // SLTIU
+      *controls = (struct_controls){1, 0, 0, 0, 0, 3, 0, 1, 1};
+      break;
+    case 0x2: // Jump
+      *controls = (struct_controls){2, 1, 2, 0, 2, 0, 0, 2, 0};
+      break;
+    default:
+      return 1;
+  }
+  
   return 0;
 }
 
