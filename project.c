@@ -5,6 +5,7 @@
 /* 10 Points */
 void ALU(unsigned A,unsigned B,char ALUControl,unsigned *ALUresult,char *Zero)
 {
+  // check if A and B are equal
   *Zero = ((A - B) == 0) ? 1 : 0;
 
   switch(ALUControl)
@@ -105,7 +106,11 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-
+  // Check if sign bit is 1
+  if ((offset >> 15) == 1)
+    *extended_value = offset | 0xffff0000;
+  else
+    *extended_value = offset & 0x0000ffff; // maintain positive value
 }
 
 /* ALU operations */
