@@ -56,7 +56,30 @@ int instruction_fetch(unsigned PC,unsigned *Mem,unsigned *instruction)
 /* 10 Points */
 void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsigned *r2, unsigned *r3, unsigned *funct, unsigned *offset, unsigned *jsec)
 {
-
+  // shift instruction by 26 to get the first 6 bits
+  // then store in opcode
+  *op = (instruction >> 26) & 0x0000003f; 
+    
+  // shift instruction by 21 then AND with 0x1f to get the first 5 bits
+  // then store in register 1
+  *r1 = (instruction >> 21) & 0x0000001F;
+    
+  // shift instruction by 16 then AND with 0x1f to extract the first 5 bits
+  // then store in register 2
+  *r2 = (instruction >> 16) & 0x0000001F;
+    
+  // shift instruction by 11 then AND with 0x1f to extract the first 5 bits
+  // then store in register 3
+  *r3 = (instruction >> 11) & 0x0000001F;
+    
+  // AND with 0x3f to extract the first 6 bits
+  *funct = instruction & 0x0000003F;
+    
+  // AND with 0xffff to extract the first 16 bits
+  *offset = instruction & 0X0000FFFF;
+    
+  // AND with 0x3ffffff to extract the first 26 bits
+  *jsec = instruction & 0x03FFFFFF;
 }
 
 
