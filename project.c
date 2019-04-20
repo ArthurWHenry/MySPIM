@@ -222,7 +222,27 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 /* 10 Points */
 void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,char RegWrite,char RegDst,char MemtoReg,unsigned *Reg)
 {
-
+  if (RegWrite == 1)
+  {
+    if (MemtoReg == 1)
+    {
+      // Write memdata to register addressed at r3
+      // else write memdata to register addressed at r2
+      if (RegDst == 1) 
+        Reg[r3] = memdata; 
+      else 
+        Reg[r2] = memdata;
+    }
+    else
+    {
+      // Write ALUresult to register addressed at r3
+      // else write ALUresult to register addressed at r2
+      if (RegDst == 1)
+        Reg[r3] = ALUresult;
+      else    
+        Reg[r2] = ALUresult;
+    }
+  }
 }
 
 /* PC update */
