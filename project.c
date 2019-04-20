@@ -253,7 +253,7 @@ void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char 
   *PC += 4;
 
   if (Branch == 1 && Zero == 1)
-    *PC = (extended_value << 2);
+    *PC += (extended_value << 2);
 
   // Set PC to jsec left bit shifted
   if (Jump == 1)
